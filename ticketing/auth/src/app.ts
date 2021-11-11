@@ -7,8 +7,8 @@ import { currentUserRouter } from './routes/current-user';
 import { signinRouter } from './routes/signin';
 import { signupRouter } from './routes/signup';
 import { signoutRouter } from './routes/signout';
-import { NotFoundError } from './errors/not-found-error';
-import { errorHandler } from './middlewares/error-handler';
+import { NotFoundError } from '@vdhticketing/common';
+import { errorHandler } from '@vdhticketing/common';
 
 const app = express();
 app.set('trust proxy', true);
