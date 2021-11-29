@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { app } from './app';
-import { OrderCreatedListener } from './events/listeners/order-created-listener';
-import { OrderCancelledListener } from './events/listeners/order-cancelled-listener';
+import { TicketCreatedListener } from './events/listeners/ticket-created-listener';
+import { TicketUpdatedListener } from './events/listeners/ticket-updated-listener';
 import { natsWrapper } from './nats-wrapper';
 
 const start = async () => {
@@ -20,9 +20,6 @@ const start = async () => {
     if (!process.env.NATS_CLUSTER_ID) {
         throw new Error('NATS_CLUSTER_ID not defined');
     }
-    
-    new OrderCreatedListener(natsWrapper.client).listen();
-    new OrderCancelledListener(natsWrapper.client).listen();
 
     try {
         await natsWrapper.connect(
@@ -36,6 +33,9 @@ const start = async () => {
         })
         process.on('SIGINT', () => natsWrapper.client.close());
         process.on('SIGTERM', () => natsWrapper.client.close());
+
+        new TicketCreatedListener(natsWrapper.client).listen();
+        new TicketUpdatedListener(natsWrapper.client).listen();
 
         await mongoose.connect(process.env.MONGO_URI);
         console.log('MongoDB connected!');
